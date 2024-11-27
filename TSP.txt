@@ -1,0 +1,41 @@
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class TSP{
+    public static int INF= Integer.MAX_VALUE;
+    static int tsp(int mask, int N, int[][]dist, int[][]dp,int pos) {
+        if (mask == (1 << N) - 1) {
+            return dist[pos][0];
+        }
+        if (dp[mask][pos] != -1) {
+            return dp[mask][pos];
+        }
+        int ans = INF;
+        for (int city = 0; city < N; city++) {
+            if ((mask & (1 << city)) == 0) {
+                int newAns = dist[pos][city] + tsp(mask | (1 << city), N, dist, dp, city);
+                ans = Math.min(ans, newAns);
+            }
+        }
+        return dp[mask][pos] = ans;
+    }
+    public static void main (String [] args){
+            Scanner sc= new Scanner(System.in);
+
+            System.out.println("Enter the number of cities: ");
+            int N = sc.nextInt();
+
+            int [][] dist= new int[N][N];
+            System.out.println("Enter the distance Matix: ");
+            for(int i=0; i<N; i++){
+                for(int j=0;j<N;j++){
+                    dist[i][j]=sc.nextInt();
+                }
+            }
+            int [][] dp=new int[1<<N][N];
+            for(int[]row:dp){
+                Arrays.fill(row,-1);
+            }
+            System.out.println("the minimum cost is : " + tsp(1,N,dist,dp,0));
+     }
+}
