@@ -1,0 +1,37 @@
+import java.util.Scanner;
+
+public class Rabinkarp {
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        System.out.println("Enter the Numeric String:");
+        String text = in.nextLine();
+        System.out.println("Enter the pattern to be searched:");
+        String pattern = in.nextLine();
+
+        int m = pattern.length();
+        int n = text.length();
+
+        int flag = 0;
+
+        for (int s = 0; s <= n - m; s++) {
+            if (text.substring(s, s + m).equals(pattern)) {
+                System.out.println("SUCCESS!!! The pattern is found at position " + (s + 1));
+                flag = 1;
+                break;
+            }
+        }
+
+        if (flag == 0) {
+            System.out.println("FAILURE!!!! The pattern " + pattern + " is not found in the text");
+        }
+        in.close();
+    }
+}
+
+/*
+Enter the Numeric String:
+1234568996
+Enter the pattern to be searched:
+5689
+SUCCESS!!! The pattern is found at position 5
+*/
