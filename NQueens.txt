@@ -1,0 +1,45 @@
+import java.util.*;
+
+class NQueen {
+    int[] board = new int[20];  
+    int[] count = {0};          
+    void solve(int n, int row) {
+        if (row == n) {
+            display(n);  
+        }
+        for (int col = 0; col < n; col++) {
+            board[row] = col; 
+            if (isSafe(row)) {  
+                solve(n, row + 1);  
+            }
+        }
+    }
+    boolean isSafe(int row) {
+        for (int i = 0; i < row; i++) {
+            // Check if two queens are in the same column or diagonal
+            if (board[i] == board[row] || Math.abs(board[i] - board[row]) == row - i) {
+                return false;  // Not safe
+            }
+        }
+        return true;  
+    }
+    void display(int n) {
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                // Print 'Q' for queen and 'x' for empty space
+                System.out.print(board[i] == j ? "Q " : "x ");
+            }
+            System.out.println();
+        }
+        System.out.println("\n************");
+        count[0]++; 
+    }
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        System.out.print("Enter number of Queens: ");
+        NQueen nQueen = new NQueen();  
+        nQueen.solve(in.nextInt(), 0);  
+        System.out.println("Total solutions: " + nQueen.count[0]);  
+        in.close();
+    }
+}
