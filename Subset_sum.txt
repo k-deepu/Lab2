@@ -1,0 +1,44 @@
+import java.util.Scanner;
+public class Subsetsum{
+    public static boolean isSubsetsum(int[]arr, int sum){
+        int n = arr.length;
+        boolean[][]dp=new boolean[n+1][sum+1];
+        dp[0][0] = true;
+        for(int j=1;j<=sum; j++){
+            dp[0][j]=false;
+        }
+        for(int i=1;i<=n;i++){
+            for(int j=0;j<=sum;j++){
+                dp[i][j]=dp[i-1][j];
+
+                if(j>=arr[i-1]){
+                    dp[i][j] = dp[i][j] || dp[i-1][j-arr[i-1]];
+                }
+            }
+        }
+        return dp[n][sum];
+    }
+
+    public static void main(String[]args){
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("Enter the size of the array : ");
+        int n = sc.nextInt();
+
+        int[]arr = new int[n];
+        System.out.println("Enter the elements of arrays: ");
+        for(int i=0;i<n;i++) {
+            arr[i] = sc.nextInt();
+        }
+        System.out.println("Enter the Target Sum: ");
+        int sum = sc.nextInt();
+
+        if(isSubsetsum(arr,sum)) {
+            System.out.println("Subset Exists");
+        }else{
+            System.out.println("subset dont exists");
+        }
+        sc.close();
+    }
+
+}
