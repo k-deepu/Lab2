@@ -1,0 +1,71 @@
+import java.util.Scanner;
+
+public class FiniteAutomata {
+
+    // Function to build the transition table for the Finite Automata
+    public static int[][] buildTransitionTable(String pattern) {
+        int m = pattern.length();
+        int alphabetSize = 256; // Assuming ASCII characters
+        int[][] transitionTable = new int[m + 1][alphabetSize];
+
+        // Initializing the transition table
+        for (int state = 0; state <= m; state++) {
+            for (int ch = 0; ch < alphabetSize; ch++) {
+                transitionTable[state][ch] = 0;
+            }
+        }
+
+        // Building the transition table
+        for (int state = 0; state <= m; state++) {
+            for (int ch = 0; ch < alphabetSize; ch++) {
+                if (state < m && pattern.charAt(state) == (char) ch) {
+                    transitionTable[state][ch] = state + 1;
+                } else {
+                    int k = state;
+                    while (k > 0 && pattern.charAt(k - 1) != (char) ch) {
+                        k = transitionTable[k - 1][ch];
+                    }
+                    transitionTable[state][ch] = k;
+                }
+            }
+        }
+
+        return transitionTable;
+    }
+
+    // Function to perform string matching using Finite Automata
+    public static void finiteAutomataSearch(String text, String pattern) {
+        int m = pattern.length();
+        int n = text.length();
+
+        // Build the transition table
+        int[][] transitionTable = buildTransitionTable(pattern);
+
+        // Perform the matching
+        int state = 0;  // Initial state
+        for (int i = 0; i < n; i++) {
+            state = transitionTable[state][text.charAt(i)];
+
+            // If we reach the last state, a match is found
+            if (state == m) {
+                System.out.println("Pattern found at index " + (i - m + 1));
+            }
+        }
+    }
+
+    // Main function to test the Finite Automata algorithm
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // User input for the text and pattern
+        System.out.print("Enter the text: ");
+        String text = scanner.nextLine();
+        System.out.print("Enter the pattern: ");
+        String pattern = scanner.nextLine();
+
+        // Perform Finite Automata search
+        finiteAutomataSearch(text, pattern);
+
+        scanner.close();
+    }
+}
