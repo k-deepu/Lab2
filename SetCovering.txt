@@ -3,75 +3,71 @@ import java.util.*;
 public class SetCovering {
 
     // Function to find the set cover using a greedy approach
-    static void findSetCover(Set<Integer> universe, List<Set<Integer>> sets) {
-        // Set to store the selected sets
-        Set<Set<Integer>> selectedSets = new HashSet<>();
-        
-        // Set to track covered elements
+    static Set<Integer> findSetCover(Set<Integer> universe, List<Set<Integer>> subsets) {
+        // To store the selected sets for the final solution
+        Set<Integer> selectedSets = new HashSet<>();
+        // To keep track of covered elements
         Set<Integer> covered = new HashSet<>();
 
-        // Continue until all elements in the universe are covered
-        while (covered.size() < universe.size()) {
-            Set<Integer> bestSet = null;
-            int maxCoverCount = 0;
+        // Loop until the entire universe is covered
+        while (!covered.containsAll(universe)) {
+            // Find the subset that covers the maximum number of uncovered elements
+            Set<Integer> bestSubset = null;
+            int maxCovered = 0;
+            for (Set<Integer> subset : subsets) {
+                Set<Integer> temp = new HashSet<>(subset);
+                temp.removeAll(covered); // Uncovered elements in this subset
 
-            // Find the set that covers the most uncovered elements
-            for (Set<Integer> s : sets) {
-                Set<Integer> uncovered = new HashSet<>(s);
-                uncovered.removeAll(covered);
-                if (uncovered.size() > maxCoverCount) {
-                    maxCoverCount = uncovered.size();
-                    bestSet = s;
+                if (temp.size() > maxCovered) {
+                    bestSubset = subset;
+                    maxCovered = temp.size();
                 }
             }
 
-            // Add the best set to the selected sets
-            selectedSets.add(bestSet);
-            covered.addAll(bestSet);  // Mark elements of the selected set as covered
-            sets.remove(bestSet);  // Remove the selected set from the list
+            // Add the best subset to the solution and update the covered elements
+            if (bestSubset != null) {
+                selectedSets.addAll(bestSubset);
+                covered.addAll(bestSubset);
+            }
         }
 
-        // Print the selected sets
-        System.out.println("Selected sets for the set cover:");
-        for (Set<Integer> s : selectedSets) {
-            System.out.println(s);
-        }
+        return selectedSets;
     }
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        // Input the universe of elements
-        System.out.print("Enter the number of elements in the universe: ");
+        // Input for the universe
+        System.out.println("Enter the number of elements in the universe: ");
         int n = scanner.nextInt();
         Set<Integer> universe = new HashSet<>();
-        System.out.println("Enter the elements of the universe:");
+        System.out.println("Enter the elements of the universe: ");
         for (int i = 0; i < n; i++) {
             universe.add(scanner.nextInt());
         }
 
-        // Input the number of sets
-        System.out.print("Enter the number of sets: ");
+        // Input for the number of subsets
+        System.out.println("Enter the number of subsets: ");
         int m = scanner.nextInt();
-        
-        // List to hold all sets
-        List<Set<Integer>> sets = new ArrayList<>();
-        
-        // Input each set
-        System.out.println("Enter the sets (one set per line):");
+        List<Set<Integer>> subsets = new ArrayList<>();
+
+        // Input for the subsets
         for (int i = 0; i < m; i++) {
-            System.out.println("Enter elements of set " + (i + 1) + ": ");
-            Set<Integer> set = new HashSet<>();
-            int size = scanner.nextInt();
-            System.out.println("Enter " + size + " elements:");
-            for (int j = 0; j < size; j++) {
-                set.add(scanner.nextInt());
+            System.out.println("Enter the number of elements in subset " + (i + 1) + ": ");
+            int subsetSize = scanner.nextInt();
+            Set<Integer> subset = new HashSet<>();
+            System.out.println("Enter the elements of subset " + (i + 1) + ": ");
+            for (int j = 0; j < subsetSize; j++) {
+                subset.add(scanner.nextInt());
             }
-            sets.add(set);
+            subsets.add(subset);
         }
 
-        // Call function to find the set cover
-        findSetCover(universe, sets);
+        // Call the function to find the set cover
+        Set<Integer> result = findSetCover(universe, subsets);
+
+        // Print the result
+        System.out.println("Set cover is: " + result);
 
         scanner.close();
     }
