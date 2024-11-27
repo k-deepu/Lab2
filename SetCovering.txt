@@ -1,0 +1,78 @@
+import java.util.*;
+
+public class SetCovering {
+
+    // Function to find the set cover using a greedy approach
+    static void findSetCover(Set<Integer> universe, List<Set<Integer>> sets) {
+        // Set to store the selected sets
+        Set<Set<Integer>> selectedSets = new HashSet<>();
+        
+        // Set to track covered elements
+        Set<Integer> covered = new HashSet<>();
+
+        // Continue until all elements in the universe are covered
+        while (covered.size() < universe.size()) {
+            Set<Integer> bestSet = null;
+            int maxCoverCount = 0;
+
+            // Find the set that covers the most uncovered elements
+            for (Set<Integer> s : sets) {
+                Set<Integer> uncovered = new HashSet<>(s);
+                uncovered.removeAll(covered);
+                if (uncovered.size() > maxCoverCount) {
+                    maxCoverCount = uncovered.size();
+                    bestSet = s;
+                }
+            }
+
+            // Add the best set to the selected sets
+            selectedSets.add(bestSet);
+            covered.addAll(bestSet);  // Mark elements of the selected set as covered
+            sets.remove(bestSet);  // Remove the selected set from the list
+        }
+
+        // Print the selected sets
+        System.out.println("Selected sets for the set cover:");
+        for (Set<Integer> s : selectedSets) {
+            System.out.println(s);
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Input the universe of elements
+        System.out.print("Enter the number of elements in the universe: ");
+        int n = scanner.nextInt();
+        Set<Integer> universe = new HashSet<>();
+        System.out.println("Enter the elements of the universe:");
+        for (int i = 0; i < n; i++) {
+            universe.add(scanner.nextInt());
+        }
+
+        // Input the number of sets
+        System.out.print("Enter the number of sets: ");
+        int m = scanner.nextInt();
+        
+        // List to hold all sets
+        List<Set<Integer>> sets = new ArrayList<>();
+        
+        // Input each set
+        System.out.println("Enter the sets (one set per line):");
+        for (int i = 0; i < m; i++) {
+            System.out.println("Enter elements of set " + (i + 1) + ": ");
+            Set<Integer> set = new HashSet<>();
+            int size = scanner.nextInt();
+            System.out.println("Enter " + size + " elements:");
+            for (int j = 0; j < size; j++) {
+                set.add(scanner.nextInt());
+            }
+            sets.add(set);
+        }
+
+        // Call function to find the set cover
+        findSetCover(universe, sets);
+
+        scanner.close();
+    }
+}
